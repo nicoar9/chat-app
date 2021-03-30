@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/blue_button.dart';
 import 'package:chat_app/widgets/custom_input.dart';
 import 'package:chat_app/widgets/labels.dart';
 import 'package:chat_app/widgets/logo.dart';
@@ -9,17 +10,23 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
         backgroundColor: Color(0xffF2F2F2),
         body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Logo(),
-              _Form(),
-              Labels(),
-              Text(
-                'Terms and conditions of use',
-                style: TextStyle(fontWeight: FontWeight.w200),
-              )
-            ],
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Logo(),
+                  _Form(),
+                  Labels(),
+                  Text(
+                    'Terms and conditions of use',
+                    style: TextStyle(fontWeight: FontWeight.w300),
+                  )
+                ],
+              ),
+            ),
           ),
         ));
   }
@@ -53,10 +60,11 @@ class __FormState extends State<_Form> {
             textController: passCtrl,
             isPassword: true,
           ),
-          RaisedButton(
+          BlueButton(
             onPressed: () {
-              print(emailCtrl.text);
+              print(emailCtrl.text + ' ' + passCtrl.text);
             },
+            buttonText: 'Login',
           )
         ],
       ),
