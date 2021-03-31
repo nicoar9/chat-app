@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chat_app/widgets/chat_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,31 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
+
+  List<ChatMessage> _messages = [
+    ChatMessage(
+      text: 'Hello World',
+      uid: '1123',
+    ),
+    ChatMessage(
+      text: 'asiodjaiodjasdioasjdioasdjioasdjio',
+      uid: '123',
+    ),
+    ChatMessage(
+      text: 'Hello World',
+      uid: '121233',
+    ),
+    ChatMessage(
+      text: 'Hello World',
+      uid: '123',
+    ),
+    ChatMessage(
+      text: 'Hello World',
+      uid: '123',
+    )
+  ];
+
+  bool _isTexting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +71,9 @@ class _ChatPageState extends State<ChatPage> {
             Flexible(
               child: ListView.builder(
                 physics: BouncingScrollPhysics(),
-                // itemCount: 1,
-                itemBuilder: (BuildContext context, int index) {
-                  return Text('$index');
-                },
+                itemCount: _messages.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    _messages[index],
                 reverse: true,
               ),
             ),
@@ -57,7 +82,7 @@ class _ChatPageState extends State<ChatPage> {
             ),
             Container(
               color: Colors.white,
-              height: 100,
+              height: 50,
               child: _inputChat(),
             ),
           ],
@@ -76,7 +101,15 @@ class _ChatPageState extends State<ChatPage> {
               child: TextField(
                 controller: _textController,
                 onSubmitted: _handleSubmit,
-                onChanged: (String text) {},
+                onChanged: (String text) {
+                  setState(() {
+                    if (text.trim().length > 0) {
+                      _isTexting = true;
+                    } else {
+                      _isTexting = false;
+                    }
+                  });
+                },
                 decoration: InputDecoration.collapsed(
                   hintText: 'Send message',
                 ),
@@ -88,16 +121,23 @@ class _ChatPageState extends State<ChatPage> {
               child: Platform.isIOS
                   ? CupertinoButton(
                       child: Text('Send'),
-                      onPressed: () {},
-                    )
+                      onPressed: _isTexting
+                          ? () => _handleSubmit(_textController.text.trim())
+                          : null)
                   : Container(
                       margin: EdgeInsets.symmetric(horizontal: 4),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.send,
-                          color: Colors.blue[400],
-                        ),
-                        onPressed: () {},
+                      child: IconTheme(
+                        data: IconThemeData(color: Colors.blue[400]),
+                        child: IconButton(
+                            highlightColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            icon: Icon(
+                              Icons.send,
+                            ),
+                            onPressed: _isTexting
+                                ? () =>
+                                    _handleSubmit(_textController.text.trim())
+                                : null),
                       ),
                     ),
             )
@@ -109,6 +149,14 @@ class _ChatPageState extends State<ChatPage> {
 
   _handleSubmit(String text) {
     print(text);
+    final _newMessage = ChatMessage(
+      uid: '1223',
+      text: text,
+    );
+    _messages.insert(0, _newMessage);
+    setState(() {
+      _isTexting = false;
+    });
     _textController.clear();
     _focusNode.requestFocus();
   }
