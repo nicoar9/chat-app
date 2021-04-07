@@ -11,9 +11,10 @@ class _UsersPageState extends State<UsersPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   final users = [
-    User(uid: '1', name: 'Maria', email: 'test1@test.com', online: true),
-    User(uid: '2', name: 'Patrick', email: 'test2@test.com', online: false),
-    User(uid: '3', name: 'Jane', email: 'test3@test.com', online: true),
+    Usuario(uid: '1', nombre: 'Maria', email: 'test1@test.com', online: true),
+    Usuario(
+        uid: '2', nombre: 'Patrick', email: 'test2@test.com', online: false),
+    Usuario(uid: '3', nombre: 'Jane', email: 'test3@test.com', online: true),
   ];
   @override
   Widget build(BuildContext context) {
@@ -67,12 +68,12 @@ class _UsersPageState extends State<UsersPage> {
         itemCount: users.length);
   }
 
-  ListTile _userListTile(User user) {
+  ListTile _userListTile(Usuario user) {
     return ListTile(
-      title: Text(user.name),
+      title: Text(user.nombre),
       subtitle: Text(user.email),
       leading: CircleAvatar(
-        child: Text(user.name.substring(0, 2)),
+        child: Text(user.nombre.substring(0, 2)),
         backgroundColor: Colors.blue[100],
       ),
       trailing: Container(
