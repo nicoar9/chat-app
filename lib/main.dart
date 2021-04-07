@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Chat App',
-        initialRoute: 'login',
+        initialRoute: 'loading',
         routes: appRoutes,
       ),
     );
