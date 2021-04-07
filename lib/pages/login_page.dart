@@ -1,3 +1,4 @@
+import 'package:chat_app/helpers/show_alert.dart';
 import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/widgets/blue_button.dart';
 import 'package:chat_app/widgets/custom_input.dart';
@@ -51,6 +52,7 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -69,12 +71,19 @@ class __FormState extends State<_Form> {
             isPassword: true,
           ),
           BlueButton(
-            onPressed: () {
-              print(emailCtrl.text + ' ' + passCtrl.text);
-              final authService =
-                  Provider.of<AuthService>(context, listen: false);
-              authService.login(emailCtrl.text, passCtrl.text);
-            },
+            onPressed: authService.autenticando
+                ? null
+                : () async {
+                    FocusScope.of(context).unfocus();
+                    final loginOk = await authService.login(
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+
+                    if (loginOk) {
+                    } else {
+                      showAlert(context, 'Wrong Email or Password',
+                          'Verify your Credentials');
+                    }
+                  },
             buttonText: 'Login',
           )
         ],
