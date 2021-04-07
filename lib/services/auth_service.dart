@@ -42,7 +42,6 @@ class AuthService with ChangeNotifier {
       headers: {'Content-Type': 'application/json'},
     );
 
-    print(resp.body);
     this.autenticando = false;
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
@@ -66,7 +65,6 @@ class AuthService with ChangeNotifier {
       body: jsonEncode(data),
       headers: {'Content-Type': 'application/json'},
     );
-    print(resp.body);
     this.autenticando = false;
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
@@ -88,7 +86,6 @@ class AuthService with ChangeNotifier {
       url,
       headers: {'Content-Type': 'application/json', 'x-token': token},
     );
-    print(resp.body);
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
 
