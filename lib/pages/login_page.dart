@@ -79,6 +79,7 @@ class __FormState extends State<_Form> {
                         emailCtrl.text.trim(), passCtrl.text.trim());
 
                     if (loginOk) {
+                      Navigator.pushReplacementNamed(context, 'users');
                     } else {
                       showAlert(context, 'Wrong Email or Password',
                           'Verify your Credentials');
