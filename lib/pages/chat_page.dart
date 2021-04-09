@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:chat_app/services/auth_service.dart';
+import 'package:chat_app/services/chat_service.dart';
+import 'package:chat_app/services/socket_service.dart';
 import 'package:chat_app/widgets/chat_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -13,12 +17,25 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
 
+  ChatService chatService;
+  SocketService socketService;
+  AuthService authService;
+
   List<ChatMessage> _messages = [];
 
   bool _isTexting = false;
 
   @override
+  void initState() {
+    super.initState();
+    this.chatService = Provider.of<ChatService>(context, listen: false);
+    this.socketService = Provider.of<SocketService>(context, listen: false);
+    this.authService = Provider.of<AuthService>(context, listen: false);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final userFor = chatService.userFor;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -28,7 +45,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
               backgroundColor: Colors.blue[100],
               maxRadius: 14,
               child: Text(
-                'Te',
+                userFor.nombre.substring(0, 2),
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -36,7 +53,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
               height: 3,
             ),
             Text(
-              'Jhon Doe',
+              userFor.nombre,
               style: TextStyle(color: Colors.black87, fontSize: 12),
             )
           ],
@@ -128,7 +145,6 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   _handleSubmit(String text) {
     if (text.length == 0) return;
-    print(text);
     final _newMessage = ChatMessage(
       animationController: AnimationController(
         vsync: this,
@@ -141,6 +157,11 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     _newMessage.animationController.forward();
     setState(() {
       _isTexting = false;
+    });
+    this.socketService.socket.emit('mensaje-personal', {
+      'de': authService.usuario.uid,
+      'para': this.chatService.userFor.uid,
+      'mensaje': text,
     });
     _textController.clear();
     _focusNode.requestFocus();
